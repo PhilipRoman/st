@@ -1094,6 +1094,7 @@ xicdestroy(XIC xim, XPointer client, XPointer call)
 	xw.ime.xic = NULL;
 	return 1;
 }
+int error_handler(Display *d, XErrorEvent *e) {}
 
 void
 xinit(int cols, int rows)
@@ -1103,6 +1104,8 @@ xinit(int cols, int rows)
 	Window parent;
 	pid_t thispid = getpid();
 	XColor xmousefg, xmousebg;
+
+	XSetErrorHandler(error_handler);
 
 	if (!(xw.dpy = XOpenDisplay(NULL)))
 		die("can't open display\n");
