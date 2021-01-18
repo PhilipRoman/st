@@ -221,6 +221,8 @@ static XWindow xw;
 static XSelection xsel;
 static TermWindow win;
 
+static int maximizeOnStartup;
+
 /* Font Ring Cache */
 enum {
 	FRC_NORMAL,
@@ -1227,6 +1229,13 @@ xinit(int cols, int rows)
 	XChangeProperty(xw.dpy, xw.win, xw.netwmpid, XA_CARDINAL, 32,
 			PropModeReplace, (uchar *)&thispid, 1);
 
+	if(maximizeOnStartup) {
+		Atom wm_state   = XInternAtom (xw.dpy, "_NET_WM_STATE", True );
+		Atom wm_fullscreen = XInternAtom (xw.dpy, "_NET_WM_STATE_FULLSCREEN", True );
+
+		XChangeProperty(xw.dpy, xw.win, wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&wm_fullscreen, 1);
+	}
+
 	win.mode = MODE_NUMLOCK;
 	resettitle();
 	xhints();
@@ -2063,6 +2072,9 @@ main(int argc, char *argv[])
 		break;
 	case 'l':
 		opt_line = EARGF(usage());
+		break;
+	case 'M':
+		maximizeOnStartup = 1;
 		break;
 	case 'n':
 		opt_name = EARGF(usage());
