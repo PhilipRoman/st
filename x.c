@@ -1196,6 +1196,11 @@ xinit(int cols, int rows)
 	XChangeProperty(xw.dpy, xw.win, xw.netwmpid, XA_CARDINAL, 32,
 			PropModeReplace, (uchar *)&thispid, 1);
 
+	Atom wm_state   = XInternAtom (xw.dpy, "_NET_WM_STATE", True );
+	Atom wm_fullscreen = XInternAtom (xw.dpy, "_NET_WM_STATE_FULLSCREEN", True );
+
+	XChangeProperty(xw.dpy, xw.win, wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&wm_fullscreen, 1);
+
 	win.mode = MODE_NUMLOCK;
 	resettitle();
 	xhints();
