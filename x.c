@@ -467,6 +467,8 @@ mouseaction(XEvent *e, uint release)
 	return 0;
 }
 
+static int skipclick = 0;
+
 void
 bpress(XEvent *e)
 {
@@ -476,6 +478,10 @@ bpress(XEvent *e)
 
 	if (1 <= btn && btn <= 11)
 		buttons |= 1 << (btn-1);
+	if(skipclick) {
+		skipclick = 0;
+		return;
+	}
 
 	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forcemousemod)) {
 		mousereport(e);
@@ -1783,6 +1789,7 @@ focus(XEvent *ev)
 		return;
 
 	if (ev->type == FocusIn) {
+		skipclick = 1;
 		if (xw.ime.xic)
 			XSetICFocus(xw.ime.xic);
 		win.mode |= MODE_FOCUSED;
